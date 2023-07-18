@@ -1007,7 +1007,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 8
+  m_GravityScale: 7
   m_Material: {fileID: 6200000, guid: 0ecc687254b192d44929539bbd0d98e9, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 0
@@ -1125,8 +1125,9 @@ MonoBehaviour:
   groundSpeed: 10
   acceleration: 8
   jumpingPower: 25
-  wallJumpingPower: {x: 8, y: 23}
-  dashingTime: 0.08
+  wallJumpingDuration: 0.05
+  wallJumpingPower: {x: 10, y: 30}
+  dashingTime: 0.1
   dashSpeed: 50
   dashJumpIncrease: 25
   TimeBtwDashes: 0.15
