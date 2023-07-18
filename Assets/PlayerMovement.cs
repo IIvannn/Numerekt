@@ -5,9 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     private float horizontal;
 
-    public float speed = 8f;
-    public float airSpeed = 8f;
-    public float groundSpeed = 16f;
+    public float airSpeed = 10f;
+    public float groundSpeed = 10f;
     public float acceleration = 5f;
 
     public float jumpingPower = 16f;
@@ -28,8 +27,8 @@ public class PlayerMovement : MonoBehaviour
     private bool canDash = true;
     private bool isDashing = false;
     public float dashingTime;
-    public float dashSpeed = 24f;
-    public float dashJumpIncrease = 24f;
+    public float dashSpeed = 35f;
+    public float dashJumpIncrease = 18f;
     public float TimeBtwDashes;
 
     [SerializeField] private Rigidbody2D rb;

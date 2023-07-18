@@ -981,9 +981,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1900304836}
   - component: {fileID: 1900304837}
+  - component: {fileID: 1900304833}
   - component: {fileID: 1900304835}
   - component: {fileID: 1900304834}
-  - component: {fileID: 1900304833}
   - component: {fileID: 1900304838}
   m_Layer: 0
   m_Name: Player
@@ -1007,7 +1007,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 7
+  m_GravityScale: 5
   m_Material: {fileID: 6200000, guid: 0ecc687254b192d44929539bbd0d98e9, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 0
@@ -1099,7 +1099,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1900304832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.71, z: 0}
+  m_LocalPosition: {x: 0, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1120,16 +1120,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00ce760671126d4da6684867ee36c38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
   airSpeed: 10
   groundSpeed: 10
   acceleration: 8
-  jumpingPower: 25
+  jumpingPower: 20
   wallJumpingDuration: 0.05
   wallJumpingPower: {x: 10, y: 30}
   dashingTime: 0.1
-  dashSpeed: 50
-  dashJumpIncrease: 25
+  dashSpeed: 35
+  dashJumpIncrease: 18
   TimeBtwDashes: 0.15
   rb: {fileID: 1900304833}
   groundCheck: {fileID: 217721691}
@@ -1192,9 +1191,36 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.7094021
+        value: 0.29914665
         inSlope: 0
         outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.21341698
+        value: 0.45119774
+        inSlope: 2.8767445
+        outSlope: 2.8767445
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.37216306
+        value: 0.8249834
+        inSlope: -0.4242137
+        outSlope: -0.4242137
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5695307
+        value: 0.46124035
+        inSlope: -2.030199
+        outSlope: -2.030199
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
