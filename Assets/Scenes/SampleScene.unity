@@ -348,7 +348,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -460,7 +460,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -577,7 +577,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &778890438
 GameObject:
@@ -688,7 +688,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1168388143
 GameObject:
@@ -800,7 +800,7 @@ Transform:
   m_Children:
   - {fileID: 385739523}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &1552712871
 GameObject:
@@ -969,7 +969,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1900304832
 GameObject:
@@ -980,12 +980,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1900304836}
+  - component: {fileID: 1900304837}
   - component: {fileID: 1900304835}
   - component: {fileID: 1900304834}
   - component: {fileID: 1900304833}
-  - component: {fileID: 1900304837}
   - component: {fileID: 1900304838}
-  - component: {fileID: 1900304839}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1100,14 +1099,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1900304832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -2.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 217721691}
   - {fileID: 1552712872}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1900304837
 MonoBehaviour:
@@ -1124,10 +1123,11 @@ MonoBehaviour:
   speed: 15
   airSpeed: 10
   groundSpeed: 10
+  acceleration: 8
   jumpingPower: 25
   wallJumpingPower: {x: 8, y: 23}
-  dashingTime: 0.2
-  dashSpeed: 25
+  dashingTime: 0.08
+  dashSpeed: 50
   dashJumpIncrease: 25
   TimeBtwDashes: 0.15
   rb: {fileID: 1900304833}
@@ -1248,37 +1248,6 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 0
---- !u!114 &1900304839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1900304832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d00ce760671126d4da6684867ee36c38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 8
-  airSpeed: 8
-  groundSpeed: 16
-  jumpingPower: 16
-  wallJumpingPower: {x: 8, y: 16}
-  dashingTime: 0
-  dashSpeed: 24
-  dashJumpIncrease: 24
-  TimeBtwDashes: 0
-  rb: {fileID: 0}
-  groundCheck: {fileID: 0}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  wallCheck: {fileID: 0}
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  tr: {fileID: 0}
 --- !u!1 &1930535594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1388,5 +1357,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 8f;
     public float airSpeed = 8f;
     public float groundSpeed = 16f;
+    public float acceleration = 5f;
 
     public float jumpingPower = 16f;
     private bool isFacingRight = true;
@@ -65,7 +66,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private Vector2 targetVelocity;
+
+     private void FixedUpdate()
     {
         if (IsGrounded())
         {
@@ -78,11 +81,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (IsGrounded())
             {
-                rb.velocity = new Vector2(horizontal * groundSpeed, rb.velocity.y);
+                targetVelocity = new Vector2(horizontal * groundSpeed, rb.velocity.y);
             }
             else
             {
-                rb.velocity = new Vector2(horizontal * airSpeed, rb.velocity.y);
+                targetVelocity = new Vector2(horizontal * airSpeed, rb.velocity.y);
             }
         }
         if (isDashing)
@@ -92,7 +95,11 @@ public class PlayerMovement : MonoBehaviour
                 Flip();
             }
         }
+
+        // Smoothly interpolate towards the target velocity
+        rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
     }
+
 
 
     private bool IsGrounded()
