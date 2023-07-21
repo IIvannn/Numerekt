@@ -7,7 +7,9 @@ public class PlayerMovement : MonoBehaviour
 
     public float airSpeed = 10f;
     public float groundSpeed = 10f;
-    public float acceleration = 5f;
+    private float acceleration = 7f;
+    public float fallSpeed = 8f;
+    public float fastFall = 5f;
 
     public float jumpingPower = 16f;
     private bool isFacingRight = true;
@@ -19,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float wallJumpingDirection;
     private float wallJumpingTime = 0.2f;
     private float wallJumpingCounter;
-    public float wallJumpingDuration = 0.05f;
+    private float wallJumpingDuration = 0.05f;
     public Vector2 wallJumpingPower = new Vector2(8f, 16f);
 
     private int airJumpsLeft = 2;
@@ -67,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 targetVelocity;
 
-     private void FixedUpdate()
+    private void FixedUpdate()
     {
         if (IsGrounded())
         {
@@ -84,6 +86,15 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    rb.gravityScale = fallSpeed + fastFall; // Fast fall state
+                }
+                else
+                {
+                    rb.gravityScale = fallSpeed; // Normal falling speed when not fast falling
+                }
+
                 targetVelocity = new Vector2(horizontal * airSpeed, rb.velocity.y);
             }
         }
@@ -97,6 +108,14 @@ public class PlayerMovement : MonoBehaviour
 
         // Smoothly interpolate towards the target velocity
         rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (IsGrounded())
+        {
+            rb.gravityScale = 1f;
+        }
     }
 
 

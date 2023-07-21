@@ -1122,11 +1122,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   airSpeed: 10
   groundSpeed: 10
-  acceleration: 8
+  fallSpeed: 5
+  fastFall: 5
   jumpingPower: 20
-  wallJumpingDuration: 0.05
   wallJumpingPower: {x: 10, y: 30}
-  dashingTime: 0.1
+  dashingTime: 0.08
   dashSpeed: 35
   dashJumpIncrease: 18
   TimeBtwDashes: 0.15
