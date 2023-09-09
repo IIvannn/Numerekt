@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float airSpeed = 10f;
     public float groundSpeed = 10f;
-    private float acceleration = 7f;
+    private float acceleration = 5f;
     public float fallSpeed = 8f;
     public float fastFall = 5f;
 
@@ -39,23 +39,35 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private TrailRenderer tr;
+    private Animator animator;
+
+    private void Start()
+{
+    animator = GetComponent<Animator>();
+}
 
     private void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
 
+        bool grounded = IsGrounded();
+ 
+        animator.SetBool("IsRunning", grounded && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)));
+
         if (Input.GetButtonDown("Jump"))
         {
-            if (IsGrounded())
+            if (grounded)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
-                airJumpsLeft = 2; 
+                airJumpsLeft = 2;
             }
             else if (airJumpsLeft > 0)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 airJumpsLeft--;
             }
+
+            animator.SetBool("IsJumping", true);
         }
 
         WallSlide();
@@ -66,6 +78,8 @@ public class PlayerMovement : MonoBehaviour
             Flip();
         }
     }
+
+    
 
     private Vector2 targetVelocity;
 
@@ -152,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
             wallJumpingCounter = wallJumpingTime;
 
             CancelInvoke(nameof(StopWallJumping));
-            airJumpsLeft = 2; 
+            airJumpsLeft = 2;
         }
         else
         {
@@ -174,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             Invoke(nameof(StopWallJumping), wallJumpingDuration);
-            airJumpsLeft = 2; 
+            airJumpsLeft = 2;
         }
     }
 
@@ -184,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Flip()
-    
+
     {
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
@@ -213,7 +227,7 @@ public class PlayerMovement : MonoBehaviour
         float originalAirSpeed = airSpeed;
         float originalJumpingPower = jumpingPower;
 
-       
+
         groundSpeed = dashSpeed;
         airSpeed = dashSpeed;
         jumpingPower = dashJumpIncrease;
