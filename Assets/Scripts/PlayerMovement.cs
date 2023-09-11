@@ -51,7 +51,8 @@ public class PlayerMovement : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
 
         bool grounded = IsGrounded();
- 
+        animator.SetBool("IsGrounded", grounded);
+
         animator.SetBool("IsRunning", grounded && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)));
 
         if (Input.GetButtonDown("Jump"))
@@ -67,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
                 airJumpsLeft--;
             }
 
-            animator.SetBool("IsJumping", true);
+            animator.SetTrigger("JumpTrigger");
         }
 
         WallSlide();
@@ -87,9 +88,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsGrounded())
         {
+
             if (Input.GetKeyDown(KeyCode.E))
             {
                 DashAbility();
+                animator.SetTrigger("DashTrigger");
             }
         }
         if (!isWallJumping)
