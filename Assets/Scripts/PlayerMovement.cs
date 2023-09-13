@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float airSpeed = 10f;
     public float groundSpeed = 10f;
+    public float crouchgSpeed = 5f;
     private float acceleration = 5f;
     public float fallSpeed = 8f;
     public float fastFall = 5f;
@@ -26,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     private int airJumpsLeft = 2;
 
+    private bool isCrouching = false;
     private bool canDash = true;
     private bool isDashing = false;
     public float dashingTime;
@@ -42,9 +44,9 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
 
     private void Start()
-{
-    animator = GetComponent<Animator>();
-}
+    {
+        animator = GetComponent<Animator>();
+    }
 
     private void Update()
     {
@@ -54,6 +56,19 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("IsGrounded", grounded);
 
         animator.SetBool("IsRunning", grounded && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)));
+
+        if (grounded && Input.GetKey(KeyCode.DownArrow))
+        {
+            isCrouching = true;
+            animator.SetTrigger("CrouchTrigger");
+        }
+        else
+        {
+            isCrouching = false;
+        }
+
+        animator.SetBool("IsCrouching", isCrouching);
+
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -67,12 +82,14 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 airJumpsLeft--;
             }
-
             animator.SetTrigger("JumpTrigger");
+
         }
 
+
+
         WallSlide();
-        WallJump();
+            WallJump();
 
         if (!isWallJumping && !isDashing)
         {
@@ -89,17 +106,29 @@ public class PlayerMovement : MonoBehaviour
         if (IsGrounded())
         {
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)))
             {
                 DashAbility();
                 animator.SetTrigger("DashTrigger");
             }
+            if (Input.GetMouseButtonDown(0))
+            {
+                animator.SetTrigger("Nlight");
+            }
+
         }
         if (!isWallJumping)
         {
             if (IsGrounded())
             {
-                targetVelocity = new Vector2(horizontal * groundSpeed, rb.velocity.y);
+                if (isCrouching)
+                {
+                    targetVelocity = new Vector2(horizontal * crouchgSpeed, rb.velocity.y);
+                }
+                else
+                {
+                    targetVelocity = new Vector2(horizontal * groundSpeed, rb.velocity.y);
+                }
             }
             else
             {
@@ -149,15 +178,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void WallSlide()
     {
+
         if (IsWalled() && !IsGrounded() && horizontal != 0f)
         {
             isWallSliding = true;
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+            animator.SetBool("IsOnWall", true);
+
         }
         else
         {
             isWallSliding = false;
+            animator.SetBool("IsOnWall", false);
         }
+
+
     }
 
     private void WallJump()
