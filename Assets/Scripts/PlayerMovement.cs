@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float airSpeed = 10f;
     public float groundSpeed = 10f;
     public float crouchgSpeed = 5f;
-    private float acceleration = 5f;
+    public float acceleration = 7f;
     public float fallSpeed = 8f;
     public float fastFall = 5f;
 
@@ -111,10 +111,10 @@ public class PlayerMovement : MonoBehaviour
                 DashAbility();
                 animator.SetTrigger("DashTrigger");
             }
-            if (Input.GetMouseButtonDown(0))
-            {
-                animator.SetTrigger("Nlight");
-            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+                //animator.SetTrigger("Nlight");
+            //}
 
         }
         if (!isWallJumping)
@@ -252,6 +252,15 @@ public class PlayerMovement : MonoBehaviour
         if (canDash)
         {
             StartCoroutine(Dash());
+        }
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.gameObject.CompareTag("HitBox"))
+        {
+            Debug.Log("testing collision enter");
+            ///faire des dommages au joueur + push back
         }
     }
 
