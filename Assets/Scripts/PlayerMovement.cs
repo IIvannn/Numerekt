@@ -42,10 +42,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private TrailRenderer tr;
     private Animator animator;
+    Damageable damageable;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        damageable = GetComponent<Damageable>();
     }
 
     private void Update()
@@ -86,7 +88,10 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-
+        if (Input.GetMouseButtonDown(0)) 
+        {
+            animator.SetTrigger("Nlight"); 
+        }
 
         WallSlide();
             WallJump();
@@ -97,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    
+   
 
     private Vector2 targetVelocity;
 
@@ -111,10 +116,6 @@ public class PlayerMovement : MonoBehaviour
                 DashAbility();
                 animator.SetTrigger("DashTrigger");
             }
-            //if (Input.GetMouseButtonDown(0))
-            //{
-                //animator.SetTrigger("Nlight");
-            //}
 
         }
         if (!isWallJumping)
@@ -152,8 +153,11 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        // Smoothly interpolate towards the target velocity
-        rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
+        if (!damageable.IsHit)
+        {
+            rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
+        }
+       
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -291,4 +295,9 @@ public class PlayerMovement : MonoBehaviour
         canDash = true;
     }
 
+
+    public void OnHit(float damage, Vector2 baseForce) 
+    {
+        rb.velocity = new Vector2(baseForce.x, rb.velocity.y + baseForce.y);
+    }
 }
