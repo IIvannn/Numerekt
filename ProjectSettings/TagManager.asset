@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - HitBox
+  - Chromo
   layers:
   - Default
   - TransparentFX

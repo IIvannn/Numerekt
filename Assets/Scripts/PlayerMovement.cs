@@ -5,18 +5,23 @@ public class PlayerMovement : MonoBehaviour
 {
     private float horizontal;
 
+
     public float airSpeed = 10f;
     public float groundSpeed = 10f;
-    public float crouchgSpeed = 5f;
+    public float crouchSpeed = 5f;
     public float acceleration = 7f;
-    public float fallSpeed = 8f;
-    public float fastFall = 5f;
+    public float fallSpeed = 4f;
+    public float fastFall = 2f;
 
-    public float jumpingPower = 16f;
+    public float dashForce = 10f;
+    public float dashCooldown = 1.0f;
+    private float lastDashTime = 0f;
+
+    public float jumpingPower = 18f;
     private bool isFacingRight = true;
 
     private bool isWallSliding;
-    private float wallSlidingSpeed = 1f;
+    private float wallSlidingSpeed = -0.35f;
 
     private bool isWallJumping;
     private float wallJumpingDirection;
@@ -28,12 +33,6 @@ public class PlayerMovement : MonoBehaviour
     private int airJumpsLeft = 2;
 
     private bool isCrouching = false;
-    private bool canDash = true;
-    private bool isDashing = false;
-    public float dashingTime;
-    public float dashSpeed = 35f;
-    public float dashJumpIncrease = 18f;
-    public float TimeBtwDashes;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -44,14 +43,20 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     Damageable damageable;
 
+    public bool isStunned = false;
+    public float stunMobility = 0;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         damageable = GetComponent<Damageable>();
+        animator.speed = 60.0f / 50.0f;
     }
 
     private void Update()
     {
+
+
         horizontal = Input.GetAxisRaw("Horizontal");
 
         bool grounded = IsGrounded();
@@ -71,60 +76,64 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetBool("IsCrouching", isCrouching);
 
-
         if (Input.GetButtonDown("Jump"))
         {
             if (grounded)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 airJumpsLeft = 2;
+                animator.SetTrigger("JumpTrigger");
             }
             else if (airJumpsLeft > 0)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 airJumpsLeft--;
+                animator.SetTrigger("JumpTrigger");
             }
-            animator.SetTrigger("JumpTrigger");
 
         }
 
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0) && IsGrounded() && Mathf.Abs(horizontal) == 0 && !isCrouching)
         {
-            animator.SetTrigger("Nlight"); 
+            animator.SetTrigger("Nlight");
         }
+
+        if (Input.GetMouseButtonDown(1) && IsGrounded() && Mathf.Abs(horizontal) == 0 && !isCrouching)
+        {
+            animator.SetTrigger("Nstk");
+        }
+
 
         WallSlide();
-            WallJump();
+        WallJump();
 
-        if (!isWallJumping && !isDashing)
+        if (!isWallJumping)
         {
             Flip();
         }
-    }
 
-   
+        // Handle horizontal dash
+        if (Input.GetKeyDown(KeyCode.E) && Time.time - lastDashTime >= dashCooldown && Mathf.Abs(horizontal) > 0 && !isCrouching && IsGrounded())
+        {
+            HorizontalDash();
+            lastDashTime = Time.time;
+            animator.SetTrigger("DashTrigger");
+        }
+    }
 
     private Vector2 targetVelocity;
 
     private void FixedUpdate()
     {
-        if (IsGrounded())
-        {
 
-            if (Input.GetKeyDown(KeyCode.E) && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)))
-            {
-                DashAbility();
-                animator.SetTrigger("DashTrigger");
-            }
 
-        }
         if (!isWallJumping)
         {
             if (IsGrounded())
             {
                 if (isCrouching)
                 {
-                    targetVelocity = new Vector2(horizontal * crouchgSpeed, rb.velocity.y);
+                    targetVelocity = new Vector2(horizontal * crouchSpeed, rb.velocity.y);
                 }
                 else
                 {
@@ -145,19 +154,11 @@ public class PlayerMovement : MonoBehaviour
                 targetVelocity = new Vector2(horizontal * airSpeed, rb.velocity.y);
             }
         }
-        if (isDashing)
-        {
-            if ((isFacingRight && horizontal < 0f) || (!isFacingRight && horizontal > 0f))
-            {
-                Flip();
-            }
-        }
 
         if (!damageable.IsHit)
         {
             rb.velocity = Vector2.Lerp(rb.velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
         }
-       
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -168,8 +169,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
@@ -177,26 +176,22 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsWalled()
     {
-        return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
+        return Physics2D.OverlapCircle(wallCheck.position, 0.5f, wallLayer);
     }
 
     private void WallSlide()
     {
-
         if (IsWalled() && !IsGrounded() && horizontal != 0f)
         {
             isWallSliding = true;
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
             animator.SetBool("IsOnWall", true);
-
         }
         else
         {
             isWallSliding = false;
             animator.SetBool("IsOnWall", false);
         }
-
-
     }
 
     private void WallJump()
@@ -240,7 +235,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Flip()
-
     {
         if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
@@ -251,53 +245,21 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void DashAbility()
+    private void HorizontalDash()
     {
-        if (canDash)
+        if (IsGrounded())
         {
-            StartCoroutine(Dash());
+            rb.AddForce(Vector2.right * dashForce * (isFacingRight ? 1f : -1f), ForceMode2D.Impulse);
         }
     }
 
-    public void OnCollisionEnter(Collision collision)
+    public void IsStunned()
     {
-        if (collision.collider.gameObject.CompareTag("HitBox"))
+        if (isStunned == true)
         {
-            Debug.Log("testing collision enter");
-            ///faire des dommages au joueur + push back
+            airSpeed = stunMobility;
+            groundSpeed = stunMobility;
+            acceleration = stunMobility;
         }
-    }
-
-    private IEnumerator Dash()
-    {
-        canDash = false;
-        isDashing = true;
-
-        // save original values
-        float originalGroundSpeed = groundSpeed;
-        float originalAirSpeed = airSpeed;
-        float originalJumpingPower = jumpingPower;
-
-
-        groundSpeed = dashSpeed;
-        airSpeed = dashSpeed;
-        jumpingPower = dashJumpIncrease;
-        tr.emitting = true;
-        yield return new WaitForSeconds(dashingTime);
-        tr.emitting = false;
-
-        groundSpeed = originalGroundSpeed;
-        airSpeed = originalAirSpeed;
-        jumpingPower = originalJumpingPower;
-
-        yield return new WaitForSeconds(TimeBtwDashes);
-        isDashing = false;
-        canDash = true;
-    }
-
-
-    public void OnHit(float damage, Vector2 baseForce) 
-    {
-        rb.velocity = new Vector2(baseForce.x, rb.velocity.y + baseForce.y);
     }
 }
