@@ -478,6 +478,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c7f1e55e16fba3498b3ceb1a74bf3c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NstkDmg: 30
+  forceX: 10
+  forceY: 10
+  variableForceX: 0.05
+  variableForceY: 0.001
+  stunDuration: 30
 --- !u!1 &334771913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,8 +1661,8 @@ MonoBehaviour:
   NlightDmg: 10
   forceX: 10
   forceY: 10
-  variableForceX: 0.1
-  variableForceY: 0.1
+  variableForceX: 0.001
+  variableForceY: 0.0006
   stunDuration: 0
 --- !u!1 &1433763841
 GameObject:
@@ -2798,7 +2804,7 @@ MonoBehaviour:
   _isAlive: 1
   isInvincible: 0
   invincibilityTime: 0.25
-  _health: 200
+  _health: 0
   isStunned: 0
 --- !u!95 &1900304840
 Animator:
@@ -3159,7 +3165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 704387132907203376, guid: c19a17ef3496e8d488e28ce038172d02, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.18
+      value: 5.8
       objectReference: {fileID: 0}
     - target: {fileID: 704387132907203376, guid: c19a17ef3496e8d488e28ce038172d02, type: 3}
       propertyPath: m_LocalPosition.y

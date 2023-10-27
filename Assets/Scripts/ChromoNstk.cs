@@ -1,42 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFollow : MonoBehaviour
+public class ChromoNstk : MonoBehaviour
 {
-    public Transform player1;
-    public Transform player2;
-    public float initialMinZoom = 5f; // Minimum zoom level
-    public float initialMaxZoom = 10f; // Maximum zoom level
-    public float zoomLerpSpeed = 5f; // Speed at which the camera zooms
-    public float followSpeed = 5f; // Speed at which the camera follows the players
+    Collider2D nlightCollider;
 
-    private Camera cam;
-    private float _minZoom;
-    private float _maxZoom;
+    public float NstkDmg = 10;
+    private Vector2 baseForce = Vector2.zero;
+    public float forceX = 10f;
+    public float forceY = 10f;
+    public float variableForceX = 0.1f;
+    public float variableForceY = 0.1f;
 
-    public float MinZoom { get { return _minZoom; } }
-    public float MaxZoom { get { return _maxZoom; } }
 
-    private void Start()
+
+
+    public float stunDuration = 1.0f;
+
+    private void Awake()
     {
-        _minZoom = initialMinZoom;
-        _maxZoom = initialMaxZoom;
-        cam = GetComponent<Camera>();
+        nlightCollider = GetComponent<Collider2D>();
     }
 
-    private void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (player1 == null || player2 == null) return;
+        Damageable damageable = collision.GetComponent<Damageable>();
+        if (damageable != null)
+        {
+            // Determine the direction the character is facing
+            int direction = (transform.parent.localScale.x > 0) ? 1 : -1;
 
-        // Get the midpoint between the two players
-        Vector3 midpoint = (player1.position + player2.position) / 2f;
-        // Calculate the distance between the two players
-        float distance = Vector2.Distance(player1.position, player2.position);
+            // Calculate the force direction based on the character's direction and the current health of the damageable object
+            float modifiedForceX = forceX * (1 + (damageable.MaxHealth - damageable.Health) * -variableForceX) * direction;
+            float modifiedForceY = forceY * (1 + (damageable.MaxHealth - damageable.Health) * -variableForceY);
 
-        // Set the camera's position to the midpoint
-        transform.position = Vector3.Lerp(transform.position, new Vector3(midpoint.x, midpoint.y, transform.position.z), Time.deltaTime * followSpeed);
+            // Apply the forces to the damageable object
+            Vector2 totalForce = new Vector2(modifiedForceX, modifiedForceY);
+            damageable.Hit(NstkDmg, totalForce);
+            damageable.StunCharacter((float)(stunDuration * 0.0166666666666666)); // Apply the stun effect with the specified duration
 
-        // Adjust the camera's size (orthographic size) based on the distance between the players
-        float targetZoom = Mathf.Lerp(_minZoom, _maxZoom, Mathf.InverseLerp(0, 10, distance));
-        cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, Time.deltaTime * zoomLerpSpeed);
+            // Print the forces applied for debugging
+            Debug.Log(collision.name + " hit for " + NstkDmg + " with modified force X: " + modifiedForceX + ", Y: " + modifiedForceY);
+        }
     }
+
+
+
 }
